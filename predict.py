@@ -1,5 +1,7 @@
 import argparse
 import sys
+import matplotlib.pyplot as plt
+from utils import *
 
 def error(string):
 		print(string)
@@ -21,27 +23,46 @@ def parse_file(args):
 				theta.append(float(raw.split(':')[1]))
 			return theta
 		
-def parse_plot(args):
-	pass
+def plot(x, y, theta0, theta1):
+	y_pred = [theta0 + theta1 * i for i in x]
+	plt.figure(figsize=(10, 6))
+	plt.scatter(x, y, color='blue', label='Données réelles')
+	plt.plot(x, y_pred, color='red', label='Regression Linéaire')
+	plt.xlabel("Kilométrage (km)")
+	plt.ylabel("Prix (€)")
+	plt.title("Prix estimé vs Kilométrage")
+	plt.legend()
+	plt.grid(True)
+	plt.tight_layout()
+	plt.show()
 
 def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('mileage', type=int, help='mileage to predict')
 	parser.add_argument('file', nargs='?', type=str, help='text file for input', default=None)
 	# Bonus Part
-	parser.add_argument('-sc', '--scatter', help='data scatter plot', type=str)
+	parser.add_argument('-sc', '--scatter', action='store_true', help='data scatter plot')
+	parser.add_argument('--perfect', action='store_true', help='clean / perfect data set')
 	args = parser.parse_args()
 
 	try:
 		theta = parse_file(args)
 	except:
 		theta = [0, 0]
-	print(f"theta0 = {theta[0]}, theta1 = {theta[1]}")
-	x = args.mileage
-	x = check_float(x)
-	# Y is the prediction so the price
-	y = theta[0] + theta[1] * x
-	print(f'ft_linear_regression prediction for {x} km: {y} $')
+	if args.scatter:
+		dataset = "perfect_data.csv" if args.perfect else "data.csv"
+		mileages, prices = process_csv_file(dataset)
+		plot(mileages, prices, theta[0], theta[1])
+	else:
+		print(f"theta0 = {theta[0]}, theta1 = {theta[1]}")
+		x = args.mileage
+		x = check_float(x)
+		# Y is the prediction so the price
+		y = theta[0] + theta[1] * x
+		if y < 0:
+			print('ft_linear_regression prediction the car has too many km to be valuable')
+		else:
+			print(f'ft_linear_regression prediction for {x} km: {y} $')
 
 if __name__ == "__main__":
 	main()

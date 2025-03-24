@@ -1,5 +1,4 @@
 from utils import *
-import csv
 import argparse
 import sklearn
 import os
@@ -86,71 +85,20 @@ class linear_reg:
         total_error = sum((self.theta0 + self.theta1 * x[i] - y[i])**2 for i in range(m))
         self.mse = total_error / m
 
-    def plot(self, x, y):
-        y_pred = [self.theta0 + self.theta1 * i for i in x]
-        plt.figure(figsize=(10, 6))
-        plt.scatter(x, y, color='blue', label='Données réelles')
-        plt.plot(x, y_pred, color='red', label='Regression Linéaire')
-        plt.xlabel("Kilométrage (km)")
-        plt.ylabel("Prix (€)")
-        plt.title("Prix estimé vs Kilométrage")
-        plt.legend()
-        plt.grid(True)
-        plt.tight_layout()
-        plt.show()
-
-
-
-def process_csv_file(filename):
-	mileages = []
-	prices = []
-	with open(filename, "r") as file:
-		reader = csv.DictReader(file)
-		for row in reader:
-			try:
-				mileages.append(float(row["km"]))
-				prices.append(float(row["price"]))
-			except:
-				continue
-	return mileages, prices
-
-def compare_with_sklearn(mine):
-    from sklearn.linear_model import LinearRegression
-    from sklearn.metrics import mean_squared_error
-    
-    mileages, prices = process_csv_file("data.csv")
-    
-    # Reshape pour scikit-learn
-    X = np.array(mileages).reshape(-1, 1)
-    y = np.array(prices)
-    
-    # Entraînement du modèle
-    model = LinearRegression()
-    model.fit(X, y)
-    
-    # Coefficients
-    print(f"scikit-learn - intercept: {model.intercept_}, coefficient: {model.coef_[0]}")
-    print(f"ft_linear_regression - intercept: {mine.theta0}, coefficient: {mine.theta1}")
-    
-    # Prédiction pour 61789 km
-    prediction = model.predict([[61789]])[0]
-    print(f"scikit-learn prediction for 61789 km: {prediction} $")
-    os.system('python3 predict.py 61789 theta.txt')
-    
-    # MSE
-    y_pred = model.predict(X)
-    mse = mean_squared_error(y, y_pred)
-    print(f"Mean Squared Error: {mse}")
-    print(f"ft_linear_regression Mean Squared Error: {mine.mse}")
-
 def main():
-	mileages, prices = process_csv_file("data.csv")
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--compare', action='store_true', help='Compare model with sklearn')
+	parser.add_argument('--perfect', action='store_true', help='Compare model with sklearn')
+	args = parser.parse_args()
+      
+	dataset = "perfect_data.csv" if args.perfect else "data.csv"
+	mileages, prices = process_csv_file(dataset)
 	model = linear_reg()
 	model.fit(mileages, prices)
 	# model.fit_analytically(mileages, prices)
 	model.save()
-	# compare_with_sklearn(model)
-	model.plot(mileages, prices)
+	if args.compare:
+		compare_with_sklearn(model)
 
 if __name__ == "__main__":
 	main()
