@@ -24,3 +24,10 @@ Pourquoi autant ?
 Parce que le learning rate est petit → les mises à jour sont lentes
 
 Il faut donc plus d’itérations pour atteindre une solution correcte
+
+
+Mesures de précision possibles :
+MSE	Moyenne des erreurs au carré	Comprendre l’erreur globale
+RMSE	Racine de MSE (en € ici)	Interprétation en unités réelles
+MAE	Moyenne des erreurs absolues	Moins sensible aux outliers
+R² (coefficient de détermination)	Pourcentage de variance expliquée	Score de performance global
