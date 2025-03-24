@@ -1,5 +1,6 @@
 import csv
 from math import sqrt
+import matplotlib.pyplot as plt
 
 def load_data(filename):
     km = []
@@ -44,13 +45,32 @@ def evaluate(km, price, theta0, theta1):
     print(f"RMSE : {rmse:.2f} €")
     print(f"MAE  : {mae:.2f} €")
     print(f"R²   : {r2:.4f}")
+    return(mse, rmse, mae, r2)
     
+def plot(km, price, theta0, theta1, rmse, r2):
+    y_pred = [theta0 + theta1 * x for x in km]
 
+    plt.figure(figsize=(10, 6))
+    plt.scatter(km, price, color='blue', label='Données réelles')
+    plt.plot(km, y_pred, color='red', label='Régression linéaire')
+    
+    # Ajouter des scores dans la légende
+    text = f"RMSE: {rmse:.2f} €\nR²: {r2:.4f}"
+    plt.text(min(km), max(price), text, fontsize=12, color='darkgreen')
+
+    plt.xlabel("Kilométrage (km)")
+    plt.ylabel("Prix (€)")
+    plt.title("Prix estimé vs Kilométrage")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
 
 def main():
     km, price = load_data("data.csv")
     theta0, theta1 = load_theta()
-    evaluate(km, price, theta0, theta1)
+    mse, rmse, mae, r2 = evaluate(km, price, theta0, theta1)
+    plot(km, price, theta0, theta1, rmse, r2)
 
 if __name__ == "__main__":
     main()
