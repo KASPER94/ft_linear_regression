@@ -29,8 +29,8 @@ class linear_reg:
         y_scale = self.max_y - self.min_y
 
         self.theta1 = self.theta1 * (y_scale / x_scale)
-        self.theta0 = self.theta0 * y_scale + self.min_y - (self.theta1 * self.min_x)
-
+        self.theta0 = self.theta0 * y_scale + self.min_y
+        self.theta0 = self.theta0 - (self.theta1 * self.min_x)
         self.mse = self.mse * 2 * (y_scale ** 2)
 
     def fit(self, x, y):
@@ -79,7 +79,8 @@ class linear_reg:
         self.theta1 = numerator / denominator
         self.theta0 = y_mean - self.theta1 * x_mean
 
-        total_error = sum((self.theta0 + self.theta1 * x[i] - y[i])**2 for i in range(m))
+        for i in range(m):
+            total_error = sum((self.theta0 + self.theta1 * x[i] - y[i])**2)
         self.mse = total_error / m
 
 
