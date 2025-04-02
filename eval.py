@@ -45,8 +45,8 @@ def evaluate(km, price, theta0, theta1):
     residual_var = sum((price[i] - y_pred[i])**2 for i in range(m))
     r2 = 1 - (residual_var / total_var)
 
-    print(f"MSE  : {mse:.2f}")
-    print(f"RMSE : {rmse:.2f} €")
+    print(f"MSE (marge d'erreur au carre) : {mse:.2f}")
+    print(f"RMSE (marge d'erreur): {rmse:.2f} €")
     print(f"MAE  : {mae:.2f} €")
     print(f"R²   : {r2:.4f}")
     return (mse, rmse, mae, r2)

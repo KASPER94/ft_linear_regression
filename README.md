@@ -14,10 +14,10 @@ Les gradients peuvent être très grands → le risque est que l’algorithme di
 
 👉 On met un petit learning_rate pour éviter des explosions numériques.
 
-Tu pourrais aussi normaliser les données (ex: diviser les km par 100000) pour pouvoir augmenter le learning_rate (ex: à 0.01).
+normaliser les données (ex: diviser les km par 100000) pour pouvoir augmenter le learning_rate (ex: à 0.01).
 
 Les iterations :
-C’est le nombre de boucles de mise à jour de theta0 et theta1.
+nombre de boucles de mise à jour de theta0 et theta1.
 
 Pourquoi autant ?
 
